@@ -4,7 +4,7 @@ const { authJwt } = require("@/middlewares")
 
 const { LicenseController } = require("@/controllers")
 
-const scope = 'license'
+// const scope = 'license'
 
 router.post("/generateLicenseID", authJwt.protect(), LicenseController.generateLicenseID)
 router.post("/getLicenseBy", authJwt.protect(), LicenseController.getLicenseBy)
@@ -12,17 +12,17 @@ router.post("/getLicenseByID", authJwt.protect(), LicenseController.getLicenseBy
 
 router.post(
   "/insertLicense",
-  authJwt.protect(scope, ['add']),
+  authJwt.protect(),
   LicenseController.insertLicense
 )
 router.post(
   "/updateLicenseBy",
-  authJwt.protect(scope, ['edit']),
+  authJwt.protect(),
   LicenseController.updateLicenseBy
 )
 router.post(
   "/deleteLicenseBy",
-  authJwt.protect(scope, ['delete']),
+  authJwt.protect(),
   LicenseController.deleteLicenseBy
 )
 

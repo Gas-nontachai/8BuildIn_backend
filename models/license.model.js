@@ -7,7 +7,7 @@ const { formatDate } = require('@/utils/date-helper')
 const { generateQuery, mapToCondition } = require("@/utils/db-helper")
 
 Task.generateLicenseID = (connection) => new Promise((resolve, reject) => {
-  let code = `L${formatDate(new Date(), 'yyyyMMdd')}`
+  let code = `L${formatDate(new Date(), 'yyyyMMdd')}-`
   let digit = 3
 
   let sql = `SELECT CONCAT(${connection.escape(code)}, LPAD(IFNULL(MAX(CAST(SUBSTRING(license_id,${(code.length + 1)},${digit}) AS SIGNED)),0) + 1,${digit},0)) AS id 
@@ -57,7 +57,7 @@ Task.getLicenseByID = (connection, data = {}) => new Promise((resolve, reject) =
   })
 })
 
-Task.insertLicense = (connection, data = {}) => new Promise((resolve, reject) => { 
+Task.insertLicense = (connection, data = {}) => new Promise((resolve, reject) => {
   let sql = `INSERT INTO tb_license (
     license_id,
     license_name, 

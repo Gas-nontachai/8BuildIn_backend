@@ -19,7 +19,6 @@ module.exports = (app) => {
 
   app.get("/check-file", (req, res) => {
     const { fileName } = req.query;
-    console.log(fileName);
 
     if (!fileName) {
       return res.status(400).send({ message: "File name is required." });
@@ -37,7 +36,9 @@ module.exports = (app) => {
   });
 
   app.use(`/auth`, require("./auth.route"));
+  app.use(`/customer`, require("./customer.route"));
   app.use(`/license`, require("./license.route"));
+  app.use(`/product-category`, require("./product-category.route"));
   app.use(`/menu`, require("./menu.route"));
   app.use(`/permission`, require("./permission.route"));
   app.use(`/employee`, require("./employee.route"));

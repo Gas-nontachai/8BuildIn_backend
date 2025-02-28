@@ -11,7 +11,7 @@ Task.generateEmployeeID = (connection) => new Promise((resolve, reject) => {
   let digit = 4
 
   let sql = `SELECT CONCAT(${connection.escape(code)}, LPAD(IFNULL(MAX(CAST(SUBSTRING(employee_id,${(code.length + 1)},${digit}) AS SIGNED)),0) + 1,${digit},0)) AS id 
-    FROM tb_employees
+    FROM tb_employee
     WHERE employee_id LIKE (${connection.escape(`${code}%`)}) 
     `
   connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res[0].id) })
@@ -45,7 +45,7 @@ Task.getEmployeeBy = (connection, data = {}) => new Promise((resolve, reject) =>
       FROM tb_license 
       WHERE license_id = tb.license_id
     ), tb.license_id) AS license_name
-    FROM tb_employees AS tb
+    FROM tb_employee AS tb
     WHERE TRUE
     ${condition}
     ${filter}
@@ -91,7 +91,7 @@ Task.getEmployeeByID = (connection, data = {}) => new Promise((resolve, reject) 
       FROM tb_license 
       WHERE license_id = tb.license_id
     ), tb.license_id) AS license_name
-    FROM tb_employees AS tb
+    FROM tb_employee AS tb
     WHERE employee_id = ${connection.escape(data.employee_id)}
     `
   connection.query(sql, function (err, res) {
@@ -102,36 +102,8 @@ Task.getEmployeeByID = (connection, data = {}) => new Promise((resolve, reject) 
   })
 })
 
-Task.getEmployeeNameBy = (connection, data = {}) => new Promise((resolve, reject) => {
-  let condition = mapToCondition(data)
-
-  const { filter, pagination, sort } = generateQuery(data)
-
-  const core_query = `SELECT  
-    employee_username
-    FROM tb_employees AS tb
-    WHERE TRUE
-    ${condition}
-    ${filter}
-  `
-  const count_query = `SELECT COUNT(*) AS total FROM (${core_query}) AS tb`
-
-  if (data.count) return connection.query(count_query, function (err, res_total) {
-    err ? reject(new Error(err.message)) : resolve(res_total[0].total)
-  })
-
-  connection.query(`${core_query} ${sort} ${pagination}`, function (err, res) {
-    if (err) return reject(new Error(err.message))
-    if (!pagination) return resolve({ docs: res, totalDocs: res.length })
-
-    connection.query(count_query, function (err, res_total) {
-      err ? reject(new Error(err.message)) : resolve({ docs: res, totalDocs: res_total[0].total })
-    })
-  })
-})
-
 Task.getEmployeeCredentialByID = (connection, data = {}) => new Promise((resolve, reject) => {
-  let sql = `SELECT * FROM tb_employees WHERE employee_id = ${connection.escape(data.employee_id)} `
+  let sql = `SELECT * FROM tb_employee WHERE employee_id = ${connection.escape(data.employee_id)} `
 
   connection.query(sql, function (err, res) {
     if (err) return reject(new Error(err.message))
@@ -156,7 +128,7 @@ Task.checkLogin = (connection, data = {}) => new Promise((resolve, reject) => {
        employee_lastname,
        employee_username,
        employee_img
-      FROM tb_employees
+      FROM tb_employee
       WHERE TRUE
     ${condition}`
 
@@ -169,7 +141,7 @@ Task.checkLogin = (connection, data = {}) => new Promise((resolve, reject) => {
 })
 
 Task.insertEmployee = (connection, data = {}) => new Promise((resolve, reject) => {
-  let sql = `INSERT INTO tb_employees (
+  let sql = `INSERT INTO tb_employee (
     employee_id,
     employee_username,
     employee_password,
@@ -202,13 +174,12 @@ Task.insertEmployee = (connection, data = {}) => new Promise((resolve, reject) =
     ${connection.escape(connection.session._id)},
     NOW()
   )`
-  console.log(sql);
 
   connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })
 })
 
 Task.register = (connection, data = {}) => new Promise((resolve, reject) => {
-  let sql = `INSERT INTO tb_employees (
+  let sql = `INSERT INTO tb_employee (
     employee_id, 
     employee_username, 
     employee_password, 
@@ -244,7 +215,7 @@ Task.register = (connection, data = {}) => new Promise((resolve, reject) => {
 })
 
 Task.updateEmployeeBy = (connection, data = {}) => new Promise((resolve, reject) => {
-  let sql = `UPDATE tb_employees SET 
+  let sql = `UPDATE tb_employee SET 
     employee_username = ${connection.escape(data.employee_username)},
     employee_password = ${connection.escape(data.employee_password)},
     employee_prefix = ${connection.escape(data.employee_prefix)},
@@ -264,18 +235,8 @@ Task.updateEmployeeBy = (connection, data = {}) => new Promise((resolve, reject)
   connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })
 })
 
-Task.updatePasswordEmployeeBy = (connection, data = {}) => new Promise((resolve, reject) => {
-  let sql = `UPDATE tb_employees SET 
-    employee_password = ${connection.escape(data.employee_password)},
-    updateby = ${connection.escape(connection.session._id)},
-    lastupdate = NOW()
-    WHERE employee_id = ${connection.escape(data.employee_id)}
-  `
-  connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })
-})
-
 Task.deleteEmployeeBy = (connection, data = {}) => new Promise((resolve, reject) => {
-  let sql = `DELETE FROM tb_employees WHERE employee_id = ${connection.escape(data.employee_id)} `
+  let sql = `DELETE FROM tb_employee WHERE employee_id = ${connection.escape(data.employee_id)} `
 
   connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })
 })

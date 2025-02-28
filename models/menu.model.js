@@ -3,10 +3,11 @@ const Task = function (task) {
   this.created_at = new Date()
 }
 
+const { formatDate } = require('@/utils/date-helper')
 const { generateQuery, mapToCondition } = require("@/utils/db-helper")
 
 Task.generateMenuID = (connection) => new Promise((resolve, reject) => {
-  let code = `MN`
+  let code = `M${formatDate(new Date(), 'yyyyMMdd')}-`
   let digit = 3
 
   let sql = `SELECT CONCAT(${connection.escape(code)}, LPAD(IFNULL(MAX(CAST(SUBSTRING(menu_id,${(code.length + 1)},${digit}) AS SIGNED)),0) + 1,${digit},0)) AS id 
@@ -67,7 +68,7 @@ Task.getMenuPermissionBy = (connection, data = {}) => new Promise((resolve, reje
     IFNULL(permission_delete, FALSE) AS permission_delete,
     IFNULL(permission_print, FALSE) AS permission_print
     FROM tb_menu AS tb
-    LEFT JOIN tb_permission ON tb.menu_id = tb_permission.menu_id AND license_id = ${connection.escape(data.license_id || '')}
+    LEFT JOIN tb_permission ON tb.menu_id = tb_permission.menu_id AND menu_id = ${connection.escape(data.menu_id || '')}
     ORDER BY menu_group, tb.menu_id
   `
   connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })

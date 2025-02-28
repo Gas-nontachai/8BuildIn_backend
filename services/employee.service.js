@@ -9,7 +9,6 @@ const { EmployeeModel, } = require("@/models")
 
 Task.generateEmployeeID = (connection) => EmployeeModel.generateEmployeeID(connection)
 Task.getEmployeeBy = (connection, data) => EmployeeModel.getEmployeeBy(connection, data)
-Task.getEmployeeNameBy = (connection, data) => EmployeeModel.getEmployeeNameBy(connection, data)
 Task.getEmployeeByID = (connection, data) => EmployeeModel.getEmployeeByID(connection, data)
 
 Task.insertEmployee = async (connection, data, files) => {
@@ -46,15 +45,6 @@ Task.updateEmployeeBy = async (connection, data, files) => {
     await EmployeeModel.updateEmployeeBy(connection, employee);
     return await EmployeeModel.getEmployeeByID(connection, { employee_id: employee.employee_id });
   }
-}
-
-Task.updatePasswordEmployeeBy = async (connection, data) => {
-  const { new_password, employee_id } = data
-
-  await EmployeeModel.updatePasswordEmployeeBy(connection, {
-    employee_id: employee_id,
-    employee_password: new_password,
-  })
 }
 
 Task.deleteEmployeeBy = async (connection, data) => {

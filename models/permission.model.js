@@ -15,8 +15,7 @@ Task.getPermissionBy = (connection, data = {}) => new Promise((resolve, reject) 
     IFNULL(permission_edit, FALSE) AS permission_edit,
     IFNULL(permission_approve, FALSE) AS permission_approve,
     IFNULL(permission_cancel, FALSE) AS permission_cancel,
-    IFNULL(permission_delete, FALSE) AS permission_delete,
-    IFNULL(permission_print, FALSE) AS permission_print
+    IFNULL(permission_delete, FALSE) AS permission_delete, 
     FROM tb_menu AS tb
     LEFT JOIN tb_permission ON tb.menu_id = tb_permission.menu_id AND license_id = ${connection.escape(data.license_id || '')}
     ORDER BY menu_group, tb.menu_id
@@ -38,8 +37,7 @@ Task.insertPermission = (connection, data = {}) => new Promise((resolve, reject)
       permission_edit,
       permission_approve,
       permission_cancel,
-      permission_delete,
-      permission_print
+      permission_delete, 
     ) VALUES (
       ${connection.escape(data.license_id)},
       ${connection.escape(item.menu_id)},
@@ -48,8 +46,7 @@ Task.insertPermission = (connection, data = {}) => new Promise((resolve, reject)
       ${connection.escape(item.permission_edit)},
       ${connection.escape(item.permission_approve)},
       ${connection.escape(item.permission_cancel)},
-      ${connection.escape(item.permission_delete)},
-      ${connection.escape(item.permission_print)}
+      ${connection.escape(item.permission_delete)}, 
     );`
   })
 

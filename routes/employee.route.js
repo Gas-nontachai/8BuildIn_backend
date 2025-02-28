@@ -12,17 +12,12 @@ router.post(
   authJwt.protect(),
   EmployeeController.generateEmployeeID
 )
+
 router.post(
   "/getEmployeeBy",
   authJwt.protect(),
   EmployeeController.getEmployeeBy
-)
-
-router.post(
-  "/getEmployeeNameBy",
-  authJwt.protect(),
-  EmployeeController.getEmployeeNameBy
-)
+) 
 
 router.post(
   "/getEmployeeByID",
@@ -36,17 +31,14 @@ router.post(
   fileupload({ createParentPath: true }),
   EmployeeController.updateEmployeeBy
 )
+
 router.post(
   "/insertEmployee",
   authJwt.protect(),
   fileupload({ createParentPath: true }),
   EmployeeController.insertEmployee
-);
-router.post(
-  "/updatePasswordEmployeeBy",
-  authJwt.protect(),
-  EmployeeController.updatePasswordEmployeeBy
-)
+); 
+
 router.post(
   "/deleteEmployeeBy",
   authJwt.protect(),
