@@ -3,5 +3,5 @@ module.exports = {
   PermissionController: require('./permission.controller'),
   LicenseController: require('./license.controller'),
   MenuController: require('./menu.controller'),
-  UserController: require('./user.controller'),
+  EmployeeController: require('./employee.controller'),
 }

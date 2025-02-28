@@ -40,5 +40,5 @@ module.exports = (app) => {
   app.use(`/license`, require("./license.route"));
   app.use(`/menu`, require("./menu.route"));
   app.use(`/permission`, require("./permission.route"));
-  app.use(`/user`, require("./user.route"));
+  app.use(`/employee`, require("./employee.route"));
 }

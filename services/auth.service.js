@@ -2,48 +2,47 @@ const Task = function (task) { this.task = task.task }
 
 const { fileUpload } = require("@/utils/file-helper");
 
-const directory = 'user_imgs'
+const directory = 'employee_imgs'
 
 const jwt = require("jsonwebtoken")
 
 const config = require("@/configs/auth.config")
 
-const { PermissionModel, UserModel } = require("@/models")
+const { PermissionModel, EmployeeModel } = require("@/models")
 
 const { generateAuthJWT } = require("@/utils/auth-helper")
 
 Task.getMyCredential = async (connection) => {
-  if (!connection.session._user) return { error: { message: 'Invalid Token' } }
+  if (!connection.session._employee) return { error: { message: 'Invalid Token' } }
 
-  const user = await UserModel.getUserByID(connection, { user_id: connection.session._user.user_id, })
-  const { docs: permissions } = await PermissionModel.getPermissionBy(connection, { license_id: user.license_id, })
+  const employee = await EmployeeModel.getEmployeeByID(connection, { employee_id: connection.session._employee.employee_id, })
+  const { docs: permissions } = await PermissionModel.getPermissionBy(connection, { license_id: employee.license_id, })
 
   return {
-    user,
+    employee,
     permissions,
   }
 }
 
 Task.login = async (connection, data) => {
-  const { user_username, user_password, } = data
+  const { employee_username, employee_password, } = data
+  const employee = await EmployeeModel.checkLogin(connection, { employee_username, employee_password, })
 
-  const user = await UserModel.checkLogin(connection, { user_username, user_password, })
-
-  return generateAuthJWT(user)
+  return generateAuthJWT(employee)
 }
 
 Task.register = async (connection, data, files) => {
-  const user = JSON.parse(data.user);
-  user.user_id = await UserModel.generateUserID(connection)
+  const employee = JSON.parse(data.employee);
+  employee.employee_id = await EmployeeModel.generateEmployeeID(connection)
 
   if (files) {
     for (const key in files) {
-      const user_img = await fileUpload(files[key], directory)
-      user.user_img = user_img
-      await UserModel.register(connection, user);
+      const employee_img = await fileUpload(files[key], directory)
+      employee.employee_img = employee_img
+      await EmployeeModel.register(connection, employee);
     };
   } else {
-    await UserModel.register(connection, user);
+    await EmployeeModel.register(connection, employee);
   }
 };
 
@@ -52,21 +51,21 @@ Task.refresh = async (connection, data) => {
 
   const decoded = jwt.verify(refresh_token, config.secret);
 
-  const user = await UserModel.checkLogin(connection, { user_id: decoded.user_id, })
+  const employee = await EmployeeModel.checkLogin(connection, { employee_id: decoded.employee_id, })
 
-  return generateAuthJWT(user)
+  return generateAuthJWT(employee)
 }
 
 Task.changePassword = async (connection, data) => {
   const { new_password, current_password } = data
 
-  const user = await UserModel.getUserCredentialByID(connection, { user_id: connection.session._user?.user_id, })
+  const employee = await EmployeeModel.getEmployeeCredentialByID(connection, { employee_id: connection.session._employee?.employee_id, })
 
-  if (user.user_password !== current_password) return { error: { message: 'Invalid password' } }
+  if (employee.employee_password !== current_password) return { error: { message: 'Invalid password' } }
 
-  await UserModel.updatePasswordUserBy(connection, {
-    user_id: connection.session._user?.user_id,
-    user_password: new_password,
+  await EmployeeModel.updatePasswordEmployeeBy(connection, {
+    employee_id: connection.session._employee?.employee_id,
+    employee_password: new_password,
   })
 }
 

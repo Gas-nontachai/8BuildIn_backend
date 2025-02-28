@@ -1,9 +1,9 @@
 const getConnect = require('@/utils/db-helper/connect')
 
 function getSession(req) {
-  const { _user } = req.decoded
+  const { _employee } = req.decoded
 
-  return { _id: _user.user_id, _user }
+  return { _id: _employee.employee_id, _employee }
 }
 
 module.exports = (req, res, next) => {

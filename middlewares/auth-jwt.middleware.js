@@ -7,7 +7,7 @@ const { licenseStore } = require("@/stores")
 const bypass_access = false
 
 function getTokenInfo(decoded) {
-  if (decoded.user) return { _user: decoded.user }
+  if (decoded.employee) return { _employee: decoded.employee }
 }
 
 module.exports = {
@@ -21,8 +21,8 @@ module.exports = {
 
       req.decoded = getTokenInfo(decoded)
 
-      if (scope && actions.length && req.decoded._user) {
-        const role_access = licenseStore.getLicense(req.decoded._user.license_id)
+      if (scope && actions.length && req.decoded._employee) {
+        const role_access = licenseStore.getLicense(req.decoded._employee.license_id)
 
         if (!role_access?.access[scope] || !actions.filter(action => role_access.access[scope].includes(action)).length) {
           if (bypass_access) {
