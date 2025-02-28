@@ -6,23 +6,23 @@ const Task = function (task) {
 const { formatDate } = require('@/utils/date-helper')
 const { generateQuery, mapToCondition } = require("@/utils/db-helper")
 
-Task.generateProductCategoryID = (connection) => new Promise((resolve, reject) => {
-  let code = `PDC${formatDate(new Date(), 'yyyyMMdd')}-`
+Task.generateProductID = (connection) => new Promise((resolve, reject) => {
+  let code = `PD${formatDate(new Date(), 'yyyyMMdd')}-`
   let digit = 3
 
   let sql = `SELECT CONCAT(${connection.escape(code)}, LPAD(IFNULL(MAX(CAST(SUBSTRING(product_id,${(code.length + 1)},${digit}) AS SIGNED)),0) + 1,${digit},0)) AS id 
-		FROM tb_product_category
+		FROM tb_product
 		WHERE product_id LIKE (${connection.escape(`${code}%`)}) 
 	`
   connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res[0].id) })
 })
 
-Task.getProductCategoryBy = (connection, data = {}) => new Promise((resolve, reject) => {
+Task.getProductBy = (connection, data = {}) => new Promise((resolve, reject) => {
   let condition = mapToCondition(data)
   const { filter, pagination, sort, group } = generateQuery(data)
 
   const core_query = `SELECT *
-    FROM tb_product_category AS tb
+    FROM tb_product AS tb
     WHERE TRUE
     ${condition}
     ${filter} 
@@ -43,8 +43,8 @@ Task.getProductCategoryBy = (connection, data = {}) => new Promise((resolve, rej
   })
 })
 
-Task.getProductCategoryByID = (connection, data = {}) => new Promise((resolve, reject) => {
-  let sql = `SELECT * FROM tb_product_category
+Task.getProductByID = (connection, data = {}) => new Promise((resolve, reject) => {
+  let sql = `SELECT * FROM tb_product
     WHERE product_id = ${connection.escape(data.product_id)}
     `
   connection.query(sql, function (err, res) {
@@ -55,18 +55,32 @@ Task.getProductCategoryByID = (connection, data = {}) => new Promise((resolve, r
   })
 })
 
-Task.insertProductCategory = (connection, data = {}) => new Promise((resolve, reject) => {
+Task.insertProduct = (connection, data = {}) => new Promise((resolve, reject) => {
   const sql = `
-    INSERT INTO tb_product_category (
+    INSERT INTO tb_product (
       product_id, 
-      product_category_name, 
+      product_category_id, 
+      product_name, 
+      product_quantity, 
+      product_price,
+      unit_id, 
+      material, 
+      product_img, 
+      stock_in_id, 
       addby, 
       adddate
     ) 
     VALUES (
       ${connection.escape(data.product_id)},
-      ${connection.escape(data.product_category_name)}, 
-      ${connection.escape(connection.session._id)},
+      ${connection.escape(data.product_category_id)}, 
+      ${connection.escape(data.product_name)},
+      ${connection.escape(data.product_quantity)},
+      ${connection.escape(data.product_price)},
+      ${connection.escape(data.unit_id)},
+      ${connection.escape(data.material)},
+      ${connection.escape(data.product_img)},
+      ${connection.escape(data.stock_in_id)},
+      ${connection.escape(connection.session._id)}, 
       NOW() 
     )
   `;
@@ -80,14 +94,21 @@ Task.insertProductCategory = (connection, data = {}) => new Promise((resolve, re
   });
 });
 
-Task.updateProductCategoryBy = (connection, data = {}) => new Promise((resolve, reject) => {
+Task.updateProductBy = (connection, data = {}) => new Promise((resolve, reject) => {
   const sql = `
-    UPDATE tb_product_category SET    
-      product_category_name = ${connection.escape(data.product_category_name)}, 
+    UPDATE tb_product SET    
+      product_category_id = ${connection.escape(data.product_category_id)}, 
+      product_name = ${connection.escape(data.product_name)},
+      product_quantity = ${connection.escape(data.product_quantity)},
+      product_price = ${connection.escape(data.product_price)},
+      unit_id = ${connection.escape(data.unit_id)},
+      material = ${connection.escape(data.material)},
+      product_img = ${connection.escape(data.product_img)},
+      stock_in_id = ${connection.escape(data.stock_in_id)},
       updateby = ${connection.escape(connection.session._id)},
       lastupdate = NOW()
     WHERE product_id = ${connection.escape(data.product_id)}
-  `;
+`;
 
   connection.query(sql, (err, res) => {
     if (err) {
@@ -98,8 +119,8 @@ Task.updateProductCategoryBy = (connection, data = {}) => new Promise((resolve, 
   });
 });
 
-Task.deleteProductCategoryBy = (connection, data = {}) => new Promise((resolve, reject) => {
-  let sql = `DELETE FROM tb_product_category WHERE product_id = ${connection.escape(data.product_id)} `
+Task.deleteProductBy = (connection, data = {}) => new Promise((resolve, reject) => {
+  let sql = `DELETE FROM tb_product WHERE product_id = ${connection.escape(data.product_id)} `
 
   connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })
 })
