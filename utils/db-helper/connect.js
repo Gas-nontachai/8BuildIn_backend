@@ -1,11 +1,10 @@
-const mysql = require('mysql')
+const mysql = require('mysql2')
 
 const pool = mysql.createPool({
   connectionLimit: 30,
   charset: 'utf8mb4',
-  acquireTimeout: 3000,
   multipleStatements: true,
-  port: 3306,
+  port: process.env.DB_PORT || 3306,
   database: process.env.DB_NAME,
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -17,7 +16,6 @@ module.exports = () => new Promise((resolve, reject) => {
     if (err) return reject(new Error(err.message))
 
     connection.session = null
-
     resolve(connection)
   })
 })
