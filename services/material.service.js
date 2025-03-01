@@ -9,21 +9,26 @@ Task.generateMaterialID = (connection) => MaterialModel.generateMaterialID(conne
 Task.getMaterialBy = (connection, data) => MaterialModel.getMaterialBy(connection, data)
 Task.getMaterialByID = (connection, data) => MaterialModel.getMaterialByID(connection, data)
 
-Task.insertMaterial = async (connection, data, files) => {
-    const material = JSON.parse(data.material);
+Task.insertMaterial = async (connection, data, files) => { 
+    if (data.material) {
+        const material = JSON.parse(data.material);
 
-    material.material_id = await MaterialModel.generateMaterialID(connection)
+        material.material_id = await MaterialModel.generateMaterialID(connection)
 
-    if (files) {
-        for (const key in files) {
-            const material_img = await fileUpload(files[key], directory)
-            material.material_img = material_img
+        if (files) {
+            for (const key in files) {
+                const material_img = await fileUpload(files[key], directory)
+                material.material_img = material_img
+                await MaterialModel.insertMaterial(connection, material);
+                return await MaterialModel.getMaterialByID(connection, { material_id: material.material_id });
+            };
+        } else {
             await MaterialModel.insertMaterial(connection, material);
             return await MaterialModel.getMaterialByID(connection, { material_id: material.material_id });
-        };
+        }
     } else {
-        await MaterialModel.insertMaterial(connection, material);
-        return await MaterialModel.getMaterialByID(connection, { material_id: material.material_id });
+        data.material_id = await MaterialModel.generateMaterialID(connection)
+        await MaterialModel.insertMaterial(connection, data);
     }
 };
 

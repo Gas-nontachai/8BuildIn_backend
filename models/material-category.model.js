@@ -66,7 +66,7 @@ Task.insertMaterialCategory = (connection, data = {}) => new Promise((resolve, r
     VALUES (
       ${connection.escape(data.material_category_id)},
       ${connection.escape(data.material_category_name)}, 
-      ${connection.escape(connection.session._id)},
+      'admin',
       NOW() 
     )
   `;
@@ -84,7 +84,7 @@ Task.updateMaterialCategoryBy = (connection, data = {}) => new Promise((resolve,
   const sql = `
     UPDATE tb_material_category SET    
       material_category_name = ${connection.escape(data.material_category_name)}, 
-      updateby = ${connection.escape(connection.session._id)},
+      updateby = 'admin',
       lastupdate = NOW()
     WHERE material_category_id = ${connection.escape(data.material_category_id)}
   `;

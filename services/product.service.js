@@ -10,21 +10,26 @@ Task.getProductBy = (connection, data) => ProductModel.getProductBy(connection, 
 Task.getProductByID = (connection, data) => ProductModel.getProductByID(connection, data)
 
 Task.insertProduct = async (connection, data, files) => {
-    const product = JSON.parse(data.product);
+    if (data.product) {
+        const product = JSON.parse(data.product);
 
-    product.material = JSON.stringify(product.material)
-    product.product_id = await ProductModel.generateProductID(connection)
+        product.material = JSON.stringify(product.material)
+        product.product_id = await ProductModel.generateProductID(connection)
 
-    if (files) {
-        for (const key in files) {
-            const product_img = await fileUpload(files[key], directory)
-            product.product_img = product_img
+        if (files) {
+            for (const key in files) {
+                const product_img = await fileUpload(files[key], directory)
+                product.product_img = product_img
+                await ProductModel.insertProduct(connection, product);
+                return await ProductModel.getProductByID(connection, { product_id: product.product_id });
+            };
+        } else {
             await ProductModel.insertProduct(connection, product);
             return await ProductModel.getProductByID(connection, { product_id: product.product_id });
-        };
+        }
     } else {
-        await ProductModel.insertProduct(connection, product);
-        return await ProductModel.getProductByID(connection, { product_id: product.product_id });
+        data.product_id = await ProductModel.generateProductID(connection)
+        await ProductModel.insertProduct(connection, data);
     }
 };
 
