@@ -80,7 +80,7 @@ Task.insertProduct = (connection, data = {}) => new Promise((resolve, reject) =>
       ${connection.escape(data.material)},
       ${connection.escape(data.product_img)},
       ${connection.escape(data.stock_in_id)},
-      ${connection.escape(connection.session._id)}, 
+      'admin', 
       NOW() 
     )
   `;
@@ -105,7 +105,7 @@ Task.updateProductBy = (connection, data = {}) => new Promise((resolve, reject) 
       material = ${connection.escape(data.material)},
       product_img = ${connection.escape(data.product_img)},
       stock_in_id = ${connection.escape(data.stock_in_id)},
-      updateby = ${connection.escape(connection.session._id)},
+      updateby = 'admin',
       lastupdate = NOW()
     WHERE product_id = ${connection.escape(data.product_id)}
 `;

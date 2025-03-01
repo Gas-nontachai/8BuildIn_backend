@@ -4,12 +4,12 @@ const { authJwt } = require("@/middlewares")
 
 const { MaterialCategoryController } = require("@/controllers")
 
-router.post("/generateMaterialCategoryID", authJwt.protect(), MaterialCategoryController.generateMaterialCategoryID)
-router.post("/getMaterialCategoryBy", authJwt.protect(), MaterialCategoryController.getMaterialCategoryBy)
-router.post("/getMaterialCategoryByID", authJwt.protect(), MaterialCategoryController.getMaterialCategoryByID)
+router.post("/generateMaterialCategoryID", MaterialCategoryController.generateMaterialCategoryID)
+router.post("/getMaterialCategoryBy", MaterialCategoryController.getMaterialCategoryBy)
+router.post("/getMaterialCategoryByID", MaterialCategoryController.getMaterialCategoryByID)
 
-router.post("/insertMaterialCategory", authJwt.protect(), MaterialCategoryController.insertMaterialCategory);
-router.post("/updateMaterialCategoryBy", authJwt.protect(), MaterialCategoryController.updateMaterialCategoryBy);
-router.post("/deleteMaterialCategoryBy", authJwt.protect(), MaterialCategoryController.deleteMaterialCategoryBy);
+router.post("/insertMaterialCategory", MaterialCategoryController.insertMaterialCategory);
+router.post("/updateMaterialCategoryBy", MaterialCategoryController.updateMaterialCategoryBy);
+router.post("/deleteMaterialCategoryBy", MaterialCategoryController.deleteMaterialCategoryBy);
 
 module.exports = router

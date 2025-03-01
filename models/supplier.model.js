@@ -65,9 +65,12 @@ Task.insertSupplier = (connection, data = {}) => new Promise((resolve, reject) =
   ) VALUES (
     ${connection.escape(data.supplier_id)},
     ${connection.escape(data.supplier_name)}, 
-    ${connection.escape(connection.session._id)},
+    ${connection.escape(data.supplier_contact)}, 
+    'admin',
     NOW()
   )`
+  console.log(sql);
+
   connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })
 })
 
@@ -75,7 +78,7 @@ Task.updateSupplierBy = (connection, data = {}) => new Promise((resolve, reject)
   let sql = `UPDATE tb_supplier SET    
   supplier_name = ${connection.escape(data.supplier_name)},
   supplier_contact = ${connection.escape(data.supplier_contact)}, 
-  updateby = ${connection.escape(connection.session._id)},
+  updateby = 'admin',
   lastupdate = NOW() 
   WHERE supplier_id = ${connection.escape(data.supplier_id)}
   `

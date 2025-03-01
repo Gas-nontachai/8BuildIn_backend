@@ -28,6 +28,7 @@ Task.getMaterialBy = (connection, data = {}) => new Promise((resolve, reject) =>
     ${filter} 
   `
   const count_query = `SELECT COUNT(*) AS total FROM (${core_query}) AS tb`
+  console.log(core_query);
 
   if (data.count) return connection.query(count_query, function (err, res_total) {
     err ? reject(new Error(err.message)) : resolve(res_total[0].total)
@@ -78,7 +79,7 @@ Task.insertMaterial = (connection, data = {}) => new Promise((resolve, reject) =
     ${connection.escape(data.unit_id)},
     ${connection.escape(data.material_img)},
     ${connection.escape(data.stock_in_id)},
-    ${connection.escape(connection.session._id)}, 
+    'admin', 
     NOW() 
   )
 `;
@@ -102,7 +103,7 @@ Task.updateMaterialBy = (connection, data = {}) => new Promise((resolve, reject)
     unit_id = ${connection.escape(data.unit_id)},
     material_img = ${connection.escape(data.material_img)},
     stock_in_id = ${connection.escape(data.stock_in_id)},
-    updateby = ${connection.escape(connection.session._id)},
+    updateby = 'admin',
     lastupdate = NOW()
   WHERE material_id = ${connection.escape(data.material_id)}
 `;
