@@ -65,9 +65,12 @@ Task.insertUnit = (connection, data = {}) => new Promise((resolve, reject) => {
   ) VALUES (
     ${connection.escape(data.unit_id)},
     ${connection.escape(data.unit_name_th)}, 
+    ${connection.escape(data.unit_name_en)}, 
     'admin',
     NOW()
   )`
+  console.log(sql);
+
   connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })
 })
 
