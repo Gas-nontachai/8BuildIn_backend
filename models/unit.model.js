@@ -69,8 +69,6 @@ Task.insertUnit = (connection, data = {}) => new Promise((resolve, reject) => {
     'admin',
     NOW()
   )`
-  console.log(sql);
-
   connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })
 })
 
