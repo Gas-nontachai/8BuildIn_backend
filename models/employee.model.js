@@ -33,7 +33,7 @@ Task.getEmployeeBy = (connection, data = {}) => new Promise((resolve, reject) =>
     employee_birthday, 
     employee_gender, 
     employee_address,
-    employee_img
+    employee_img,
     license_id, 
     addby, 
     adddate, 
@@ -79,7 +79,7 @@ Task.getEmployeeByID = (connection, data = {}) => new Promise((resolve, reject) 
     employee_birthday, 
     employee_gender, 
     employee_address,
-    employee_img 
+    employee_img,
     license_id, 
     addby, 
     adddate, 
