@@ -63,7 +63,11 @@ Task.updateProductBy = async (connection, data, files) => {
 }
 
 Task.deleteProductBy = async (connection, data) => {
-    await ProductModel.deleteProductBy(connection, data)
+    const res = await ProductModel.getProductByID(connection, { product_id: data.product_id })
+    for (const img of res.product_img.split(',')) {
+        await removeFile(img)
+    }
+    // await ProductModel.deleteProductBy(connection, data)
 }
 
 module.exports = Task
