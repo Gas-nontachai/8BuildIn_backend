@@ -60,22 +60,25 @@ Task.insertSupplier = (connection, data = {}) => new Promise((resolve, reject) =
     supplier_id, 
     supplier_name,
     supplier_contact,
+    supplier_img,
     addby,
     adddate
   ) VALUES (
     ${connection.escape(data.supplier_id)},
     ${connection.escape(data.supplier_name)}, 
     ${connection.escape(data.supplier_contact)}, 
+    ${connection.escape(data.supplier_img)}, 
     'admin',
     NOW()
   )`
-   connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })
+  connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })
 })
 
 Task.updateSupplierBy = (connection, data = {}) => new Promise((resolve, reject) => {
   let sql = `UPDATE tb_supplier SET    
   supplier_name = ${connection.escape(data.supplier_name)},
   supplier_contact = ${connection.escape(data.supplier_contact)}, 
+  supplier_img = ${connection.escape(data.supplier_img)}, 
   updateby = 'admin',
   lastupdate = NOW() 
   WHERE supplier_id = ${connection.escape(data.supplier_id)}
