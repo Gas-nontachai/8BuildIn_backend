@@ -9,7 +9,7 @@ Task.generateMaterialID = (connection) => MaterialModel.generateMaterialID(conne
 Task.getMaterialBy = (connection, data) => MaterialModel.getMaterialBy(connection, data)
 Task.getMaterialByID = (connection, data) => MaterialModel.getMaterialByID(connection, data)
 
-Task.insertMaterial = async (connection, data, files) => { 
+Task.insertMaterial = async (connection, data, files) => {
     if (data.material) {
         const material = JSON.parse(data.material);
 
@@ -33,21 +33,26 @@ Task.insertMaterial = async (connection, data, files) => {
 };
 
 Task.updateMaterialBy = async (connection, data, files) => {
-    const material = JSON.parse(data.material);
-    const old_material = await MaterialModel.getMaterialByID(connection, { material_id: material.material_id })
-    await removeFile(old_material.material_img)
+    if (data.material) {
+        const material = JSON.parse(data.material);
+        const old_material = await MaterialModel.getMaterialByID(connection, { material_id: material.material_id })
+        await removeFile(old_material.material_img)
 
-    if (files) {
-        for (const key in files) {
-            const material_img = await fileUpload(files[key], directory)
-            material.material_img = material_img
+        if (files) {
+            for (const key in files) {
+                const material_img = await fileUpload(files[key], directory)
+                material.material_img = material_img
+                await MaterialModel.updateMaterialBy(connection, material);
+                return await MaterialModel.getMaterialByID(connection, { material_id: material.material_id });
+            };
+        } else {
             await MaterialModel.updateMaterialBy(connection, material);
             return await MaterialModel.getMaterialByID(connection, { material_id: material.material_id });
-        };
+        }
     } else {
-        await MaterialModel.updateMaterialBy(connection, material);
-        return await MaterialModel.getMaterialByID(connection, { material_id: material.material_id });
+        await MaterialModel.updateMaterialBy(connection, data);
     }
+
 }
 
 Task.deleteMaterialBy = async (connection, data) => {

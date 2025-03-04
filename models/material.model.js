@@ -27,8 +27,7 @@ Task.getMaterialBy = (connection, data = {}) => new Promise((resolve, reject) =>
     ${condition}
     ${filter} 
   `
-  const count_query = `SELECT COUNT(*) AS total FROM (${core_query}) AS tb`
-  console.log(core_query);
+  const count_query = `SELECT COUNT(*) AS total FROM (${core_query}) AS tb` 
 
   if (data.count) return connection.query(count_query, function (err, res_total) {
     err ? reject(new Error(err.message)) : resolve(res_total[0].total)

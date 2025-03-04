@@ -86,8 +86,6 @@ Task.updateStockInBy = (connection, data = {}) => new Promise((resolve, reject) 
   supplier_id = ${connection.escape(data.supplier_id)}
   WHERE stock_in_id = ${connection.escape(data.stock_in_id)}
   `
-  console.log(sql);
-
   connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })
 })
 
