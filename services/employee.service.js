@@ -3,7 +3,6 @@ const Task = function (task) { this.task = task.task }
 const { fileUpload, removeFile } = require("@/utils/file-helper");
 
 const directory = 'employee_imgs'
-const imgs = ['employee_img']
 
 const { EmployeeModel, } = require("@/models")
 

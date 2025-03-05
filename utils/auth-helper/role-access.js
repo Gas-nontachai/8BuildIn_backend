@@ -42,17 +42,13 @@ const refreshRoleAccess = async (connection) => {
   const { docs: licenses } = await LicenseModel.getLicenseBy(connection);
 
   for (const license of licenses) {
-    const { docs: license_notifys } = await LicenseNotifyModel.getLicenseNotifyBy(connection, { license_id: license.license_id });
     const { docs: permissions } = await PermissionModel.getPermissionBy(connection, { license_id: license.license_id });
 
-    const { event_notify_keys, event_mail_keys } = extractNotifyKeys(license_notifys);
     const access = extractPermissions(permissions);
 
     licenseStore.setLicense(license.license_id, {
       ...license,
       access,
-      event_notify_keys,
-      event_mail_keys,
     });
   }
 };
