@@ -30,9 +30,9 @@ Task.insertSupplier = async (connection, data, files) => {
 Task.updateSupplierBy = async (connection, data, files) => {
     const supplier = JSON.parse(data.supplier);
     const old_supplier = await SupplierModel.getSupplierByID(connection, { supplier_id: supplier.supplier_id })
-    await removeFile(old_supplier.supplier_img)
 
     if (files) {
+        await removeFile(old_supplier.supplier_img)
         for (const key in files) {
             const supplier_img = await fileUpload(files[key], directory)
             supplier.supplier_img = supplier_img
@@ -40,6 +40,7 @@ Task.updateSupplierBy = async (connection, data, files) => {
             return await SupplierModel.getSupplierByID(connection, { supplier_id: supplier.supplier_id });
         };
     } else {
+        supplier.supplier_img = old_supplier.supplier_img
         await SupplierModel.updateSupplierBy(connection, supplier);
         return await SupplierModel.getSupplierByID(connection, { supplier_id: supplier.supplier_id });
     }

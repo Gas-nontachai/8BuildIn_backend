@@ -36,9 +36,8 @@ Task.updateMaterialBy = async (connection, data, files) => {
     if (data.material) {
         const material = JSON.parse(data.material);
         const old_material = await MaterialModel.getMaterialByID(connection, { material_id: material.material_id })
-        await removeFile(old_material.material_img)
-
         if (files) {
+            await removeFile(old_material.material_img)
             for (const key in files) {
                 const material_img = await fileUpload(files[key], directory)
                 material.material_img = material_img

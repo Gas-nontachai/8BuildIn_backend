@@ -31,9 +31,9 @@ Task.insertEmployee = async (connection, data, files) => {
 Task.updateEmployeeBy = async (connection, data, files) => {
   const employee = JSON.parse(data.employee);
   const old_employee = await EmployeeModel.getEmployeeByID(connection, { employee_id: employee.employee_id })
-  await removeFile(old_employee.employee_img)
 
   if (files) {
+    await removeFile(old_employee.employee_img)
     for (const key in files) {
       const employee_img = await fileUpload(files[key], directory)
       employee.employee_img = employee_img
@@ -41,6 +41,7 @@ Task.updateEmployeeBy = async (connection, data, files) => {
       return await EmployeeModel.getEmployeeByID(connection, { employee_id: employee.employee_id });
     };
   } else {
+    employee.employee_img = old_employee.employee_img
     await EmployeeModel.updateEmployeeBy(connection, employee);
     return await EmployeeModel.getEmployeeByID(connection, { employee_id: employee.employee_id });
   }
