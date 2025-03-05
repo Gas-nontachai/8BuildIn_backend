@@ -49,5 +49,6 @@ module.exports = (app) => {
   app.use(`/stock-out`, require("./stock-out.route"));
   app.use(`/supplier`, require("./supplier.route"));
   app.use(`/unit`, require("./unit.route"));
+  app.use(`/cart`, require("./cart.route"));
 
 }

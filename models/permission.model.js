@@ -8,14 +8,13 @@ const { mapToCondition } = require('@/utils/db-helper')
 Task.getPermissionBy = (connection, data = {}) => new Promise((resolve, reject) => {
   let sql = `SELECT tb.menu_id,
     menu_group,
-    menu_name_th,
-    menu_name_en,
+    menu_name,
     IFNULL(permission_view, FALSE) AS permission_view,
     IFNULL(permission_add, FALSE) AS permission_add,
     IFNULL(permission_edit, FALSE) AS permission_edit,
     IFNULL(permission_approve, FALSE) AS permission_approve,
     IFNULL(permission_cancel, FALSE) AS permission_cancel,
-    IFNULL(permission_delete, FALSE) AS permission_delete, 
+    IFNULL(permission_delete, FALSE) AS permission_delete
     FROM tb_menu AS tb
     LEFT JOIN tb_permission ON tb.menu_id = tb_permission.menu_id AND license_id = ${connection.escape(data.license_id || '')}
     ORDER BY menu_group, tb.menu_id

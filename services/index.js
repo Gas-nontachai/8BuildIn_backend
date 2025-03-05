@@ -12,4 +12,5 @@ module.exports = {
   StockOutService: require('./stock-out.service'),
   SupplierService: require('./supplier.service'),
   UnitService: require('./unit.service'),
+  CartService: require('./cart.service'),
 }

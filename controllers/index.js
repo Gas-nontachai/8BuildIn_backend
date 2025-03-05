@@ -13,4 +13,5 @@ module.exports = {
   StockOutController: require('./stock-out.controller'),
   SupplierController: require('./supplier.controller'),
   UnitController: require('./unit.controller'),
+  CartController: require('./cart.controller'),
 }

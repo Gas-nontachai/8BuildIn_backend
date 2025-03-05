@@ -9,44 +9,46 @@ Task.getLicenseBy = (connection, data) => LicenseModel.getLicenseBy(connection, 
 Task.getLicenseByID = (connection, data) => LicenseModel.getLicenseByID(connection, data)
 
 Task.insertLicense = async (connection, data) => {
-  const {
-    license,
-    license_notifys,
-    permissions,
-  } = data
 
-  license.license_id = await LicenseModel.generateLicenseID(connection)
+  // const {
+  //   license
+  // } = data
 
-  await PermissionModel.insertPermission(connection, { license_id: license.license_id, permissions })
-  await LicenseNotifyModel.insertLicenseNotify(connection, { license_id: license.license_id, license_notifys })
-  await LicenseModel.insertLicense(connection, license)
+  data.license_id = await LicenseModel.generateLicenseID(connection)
 
-  await refreshRoleAccess(connection)
+  // await PermissionModel.insertPermission(connection, { license_id: license.license_id, permissions })
+  // await LicenseNotifyModel.insertLicenseNotify(connection, { license_id: license.license_id, license_notifys })
+  await LicenseModel.insertLicense(connection, data)
+  // await refreshRoleAccess(connection)
 }
+// Task.updateLicenseBy = async (connection, data) => {
+// const {
+//   license,
+//   license_notifys,
+//   permissions,
+// } = data
+
+// await PermissionModel.deletePermissionBy(connection, { match: { license_id: license.license_id } })
+// await LicenseNotifyModel.deleteLicenseNotifyBy(connection, { match: { license_id: license.license_id } })
+
+// await PermissionModel.insertPermission(connection, { license_id: license.license_id, permissions })
+// await LicenseNotifyModel.insertLicenseNotify(connection, { license_id: license.license_id, license_notifys })
+// await LicenseModel.updateLicenseBy(connection, data)
+// return await LicenseModel.getLicenseByID(connection, { license_id: data.license_id });
+
+// await refreshRoleAccess(connection)
+// }
+
 Task.updateLicenseBy = async (connection, data) => {
-  const {
-    license,
-    license_notifys,
-    permissions,
-  } = data
-
-  await PermissionModel.deletePermissionBy(connection, { match: { license_id: license.license_id } })
-  await LicenseNotifyModel.deleteLicenseNotifyBy(connection, { match: { license_id: license.license_id } })
-
-  await PermissionModel.insertPermission(connection, { license_id: license.license_id, permissions })
-  await LicenseNotifyModel.insertLicenseNotify(connection, { license_id: license.license_id, license_notifys })
-  await LicenseModel.updateLicenseBy(connection, license)
-
-  await refreshRoleAccess(connection)
+  await LicenseModel.updateLicenseBy(connection, data);
+  return await LicenseModel.getLicenseByID(connection, { license_id: data.license_id });
 }
 Task.deleteLicenseBy = async (connection, data) => {
-  const { license_id } = data
-
-  await PermissionModel.deletePermissionBy(connection, { match: { license_id } })
-  await LicenseNotifyModel.deleteLicenseNotifyBy(connection, { match: { license_id } })
+  const { license_id } = data 
+  // await PermissionModel.deletePermissionBy(connection, { match: { license_id } })
+  // await LicenseNotifyModel.deleteLicenseNotifyBy(connection, { match: { license_id } })
   await LicenseModel.deleteLicenseBy(connection, { match: { license_id } })
-
-  await refreshRoleAccess(connection)
+  // await refreshRoleAccess(connection)
 }
 
 module.exports = Task

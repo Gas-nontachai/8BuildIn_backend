@@ -65,6 +65,7 @@ Task.insertUnit = (connection, data = {}) => new Promise((resolve, reject) => {
   ) VALUES (
     ${connection.escape(data.unit_id)},
     ${connection.escape(data.unit_name_th)}, 
+    ${connection.escape(data.unit_name_en)}, 
     'admin',
     NOW()
   )`
