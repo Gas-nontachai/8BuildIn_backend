@@ -61,13 +61,11 @@ Task.insertLicense = (connection, data = {}) => new Promise((resolve, reject) =>
   let sql = `INSERT INTO tb_license (
     license_id,
     license_name, 
-    license_primary,
     addby,
     adddate
   ) VALUES (
     ${connection.escape(data.license_id)},
     ${connection.escape(data.license_name)},
-    '${connection.escape(data.license_primary)}',
     'admin',
     NOW()
   )`
