@@ -12,4 +12,5 @@ module.exports = {
   StockOutModel: require('./stock-out.model'),
   SupplierModel: require('./supplier.model'),
   UnitModel: require('./unit.model'),
+  CartModel: require('./cart.model'),
 }
