@@ -4,12 +4,12 @@ const { authJwt } = require("@/middlewares")
 
 const { StockOutController } = require("@/controllers")
 
-router.post("/generateStockOutID", StockOutController.generateStockOutID)
-router.post("/getStockOutBy", StockOutController.getStockOutBy)
-router.post("/getStockOutByID", StockOutController.getStockOutByID)
+router.post("/generateStockOutID", authJwt.protect(), StockOutController.generateStockOutID)
+router.post("/getStockOutBy", authJwt.protect(), StockOutController.getStockOutBy)
+router.post("/getStockOutByID", authJwt.protect(), StockOutController.getStockOutByID)
 
-router.post("/insertStockOut", StockOutController.insertStockOut);
-router.post("/updateStockOutBy", StockOutController.updateStockOutBy);
-router.post("/deleteStockOutBy", StockOutController.deleteStockOutBy);
+router.post("/insertStockOut", authJwt.protect(), StockOutController.insertStockOut);
+router.post("/updateStockOutBy", authJwt.protect(), StockOutController.updateStockOutBy);
+router.post("/deleteStockOutBy", authJwt.protect(), StockOutController.deleteStockOutBy);
 
 module.exports = router

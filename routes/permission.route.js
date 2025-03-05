@@ -4,6 +4,6 @@ const { authJwt } = require("@/middlewares")
 
 const { PermissionController } = require("@/controllers");
 
-router.post("/getPermissionBy", PermissionController.getPermissionBy)
+router.post("/getPermissionBy", authJwt.protect(), PermissionController.getPermissionBy)
 
 module.exports = router

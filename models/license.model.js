@@ -66,7 +66,7 @@ Task.insertLicense = (connection, data = {}) => new Promise((resolve, reject) =>
   ) VALUES (
     ${connection.escape(data.license_id)},
     ${connection.escape(data.license_name)},
-    'admin',
+    ${connection.escape(connection.session._id)},
     NOW()
   )`
   connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })
@@ -75,7 +75,7 @@ Task.insertLicense = (connection, data = {}) => new Promise((resolve, reject) =>
 Task.updateLicenseBy = (connection, data = {}) => new Promise((resolve, reject) => {
   let sql = `UPDATE tb_license SET
     license_name = ${connection.escape(data.license_name)}, 
-    updateby = 'admin',
+    updateby = ${connection.escape(connection.session._id)},
     lastupdate = NOW()
     WHERE license_id = ${connection.escape(data.license_id)}
   `

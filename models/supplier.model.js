@@ -68,7 +68,7 @@ Task.insertSupplier = (connection, data = {}) => new Promise((resolve, reject) =
     ${connection.escape(data.supplier_name)}, 
     ${connection.escape(data.supplier_contact)}, 
     ${connection.escape(data.supplier_img)}, 
-    'admin',
+    ${connection.escape(connection.session._id)},
     NOW()
   )`
   connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })
@@ -79,7 +79,7 @@ Task.updateSupplierBy = (connection, data = {}) => new Promise((resolve, reject)
   supplier_name = ${connection.escape(data.supplier_name)},
   supplier_contact = ${connection.escape(data.supplier_contact)}, 
   supplier_img = ${connection.escape(data.supplier_img)}, 
-  updateby = 'admin',
+  updateby = ${connection.escape(connection.session._id)},
   lastupdate = NOW() 
   WHERE supplier_id = ${connection.escape(data.supplier_id)}
   `

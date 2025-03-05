@@ -66,7 +66,7 @@ Task.insertProductCategory = (connection, data = {}) => new Promise((resolve, re
     VALUES (
       ${connection.escape(data.product_category_id)},
       ${connection.escape(data.product_category_name)}, 
-      'admin',
+      ${connection.escape(connection.session._id)},
       NOW() 
     )
   `;
@@ -84,7 +84,7 @@ Task.updateProductCategoryBy = (connection, data = {}) => new Promise((resolve, 
   const sql = `
     UPDATE tb_product_category SET    
       product_category_name = ${connection.escape(data.product_category_name)}, 
-      updateby = 'admin',
+      updateby = ${connection.escape(connection.session._id)},
       lastupdate = NOW()
     WHERE product_category_id = ${connection.escape(data.product_category_id)}
   `;

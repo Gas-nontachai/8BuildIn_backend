@@ -5,12 +5,12 @@ const { authJwt } = require("@/middlewares")
 
 const { ProductController } = require("@/controllers")
 
-router.post("/generateProductID", ProductController.generateProductID)
-router.post("/getProductBy", ProductController.getProductBy)
-router.post("/getProductByID", ProductController.getProductByID)
+router.post("/generateProductID", authJwt.protect(), ProductController.generateProductID)
+router.post("/getProductBy", authJwt.protect(), ProductController.getProductBy)
+router.post("/getProductByID", authJwt.protect(), ProductController.getProductByID)
 
-router.post("/insertProduct", fileupload({ createParentPath: true }), ProductController.insertProduct);
-router.post("/updateProductBy", fileupload({ createParentPath: true }), ProductController.updateProductBy);
-router.post("/deleteProductBy", ProductController.deleteProductBy);
+router.post("/insertProduct", authJwt.protect(), fileupload({ createParentPath: true }), ProductController.insertProduct);
+router.post("/updateProductBy", authJwt.protect(), fileupload({ createParentPath: true }), ProductController.updateProductBy);
+router.post("/deleteProductBy", authJwt.protect(), ProductController.deleteProductBy);
 
 module.exports = router

@@ -171,7 +171,7 @@ Task.insertEmployee = (connection, data = {}) => new Promise((resolve, reject) =
     ${connection.escape(data.employee_address)},
     ${connection.escape(data.employee_img)},
     ${connection.escape(data.license_id)},
-    'admin',
+    ${connection.escape(connection.session._id)},
     NOW()
   )`
 
@@ -228,7 +228,7 @@ Task.updateEmployeeBy = (connection, data = {}) => new Promise((resolve, reject)
     employee_address = ${connection.escape(data.employee_address)}, 
     employee_img = ${connection.escape(data.employee_img)}, 
     license_id = ${connection.escape(data.license_id)}, 
-    updateby = 'admin',
+    updateby = ${connection.escape(connection.session._id)},
     lastupdate = NOW()
     WHERE employee_id = ${connection.escape(data.employee_id)}
   `

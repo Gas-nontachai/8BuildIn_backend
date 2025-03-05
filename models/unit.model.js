@@ -66,7 +66,7 @@ Task.insertUnit = (connection, data = {}) => new Promise((resolve, reject) => {
     ${connection.escape(data.unit_id)},
     ${connection.escape(data.unit_name_th)}, 
     ${connection.escape(data.unit_name_en)}, 
-    'admin',
+    ${connection.escape(connection.session._id)},
     NOW()
   )`
   connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })
@@ -76,7 +76,7 @@ Task.updateUnitBy = (connection, data = {}) => new Promise((resolve, reject) => 
   let sql = `UPDATE tb_unit SET    
   unit_name_th = ${connection.escape(data.unit_name_th)},
   unit_name_en = ${connection.escape(data.unit_name_en)}, 
-  updateby = 'admin',
+  updateby = ${connection.escape(connection.session._id)},
   lastupdate = NOW() 
   WHERE unit_id = ${connection.escape(data.unit_id)}
   `

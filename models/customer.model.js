@@ -80,7 +80,7 @@ Task.insertCustomer = (connection, data = {}) => new Promise((resolve, reject) =
       ${connection.escape(data.customer_birthday)},
       ${connection.escape(data.customer_gender)},
       ${connection.escape(data.customer_address)},
-      'admin',
+      ${connection.escape(connection.session._id)},
       NOW() 
     )
   `;
@@ -105,7 +105,7 @@ Task.updateCustomerBy = (connection, data = {}) => new Promise((resolve, reject)
       customer_birthday = ${connection.escape(data.customer_birthday)},
       customer_gender = ${connection.escape(data.customer_gender)},
       customer_address = ${connection.escape(data.customer_address)}, 
-      updateby = 'admin',
+      updateby = ${connection.escape(connection.session._id)},
       lastupdate = NOW()
     WHERE customer_id = ${connection.escape(data.customer_id)}
   `;
