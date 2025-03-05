@@ -48,9 +48,10 @@ Task.updateProductBy = async (connection, data, files) => {
     const product = JSON.parse(data.product);
     const img_arr = []
     const old_product = await ProductModel.getProductByID(connection, { product_id: product.product_id })
-    await removeFile(old_product.product_img)
-
     if (files) {
+        for (const element of old_product.product_img.split(',')) {
+            await removeFile(element)
+        }
         for (const key in files) {
             const product_img = await fileUpload(files[key], directory)
             img_arr.push(product_img)
@@ -59,6 +60,7 @@ Task.updateProductBy = async (connection, data, files) => {
         await ProductModel.updateProductBy(connection, product);
         return await ProductModel.getProductByID(connection, { product_id: product.product_id });
     } else {
+        product.product_img = old_product.product_img
         await ProductModel.updateProductBy(connection, product);
         return await ProductModel.getProductByID(connection, { product_id: product.product_id });
     }
@@ -69,7 +71,7 @@ Task.deleteProductBy = async (connection, data) => {
     for (const img of res.product_img.split(',')) {
         await removeFile(img)
     }
-    // await ProductModel.deleteProductBy(connection, data)
+    await ProductModel.deleteProductBy(connection, data)
 }
 
 module.exports = Task
