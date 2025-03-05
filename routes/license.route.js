@@ -12,14 +12,17 @@ router.post("/getLicenseByID", LicenseController.getLicenseByID)
 
 router.post(
   "/insertLicense",
+  authJwt.protect(),
   LicenseController.insertLicense
 )
 router.post(
   "/updateLicenseBy",
+  authJwt.protect(),
   LicenseController.updateLicenseBy
 )
 router.post(
   "/deleteLicenseBy",
+  authJwt.protect(),
   LicenseController.deleteLicenseBy
 )
 

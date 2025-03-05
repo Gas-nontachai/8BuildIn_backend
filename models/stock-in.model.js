@@ -72,7 +72,7 @@ Task.insertStockIn = (connection, data = {}) => new Promise((resolve, reject) =>
     ${connection.escape(data.stock_in_price)}, 
     ${connection.escape(data.supplier_id)}, 
     ${connection.escape(data.stock_in_date)}, 
-    'admin',
+    ${connection.escape(connection.session._id)},
     NOW()
   )`
   connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })

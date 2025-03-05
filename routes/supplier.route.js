@@ -5,12 +5,12 @@ const { authJwt } = require("@/middlewares")
 
 const { SupplierController } = require("@/controllers")
 
-router.post("/generateSupplierID", SupplierController.generateSupplierID)
-router.post("/getSupplierBy", SupplierController.getSupplierBy)
-router.post("/getSupplierByID", SupplierController.getSupplierByID)
+router.post("/generateSupplierID", authJwt.protect(), SupplierController.generateSupplierID)
+router.post("/getSupplierBy", authJwt.protect(), SupplierController.getSupplierBy)
+router.post("/getSupplierByID", authJwt.protect(), SupplierController.getSupplierByID)
 
-router.post("/insertSupplier", fileupload({ createParentPath: true }), SupplierController.insertSupplier);
-router.post("/updateSupplierBy", fileupload({ createParentPath: true }), SupplierController.updateSupplierBy);
-router.post("/deleteSupplierBy", SupplierController.deleteSupplierBy);
+router.post("/insertSupplier", authJwt.protect(), fileupload({ createParentPath: true }), SupplierController.insertSupplier);
+router.post("/updateSupplierBy", authJwt.protect(), fileupload({ createParentPath: true }), SupplierController.updateSupplierBy);
+router.post("/deleteSupplierBy", authJwt.protect(), SupplierController.deleteSupplierBy);
 
 module.exports = router

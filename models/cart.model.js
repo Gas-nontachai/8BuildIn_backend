@@ -66,7 +66,7 @@ Task.insertCart = (connection, data = {}) => new Promise((resolve, reject) => {
     ${connection.escape(data.cart_id)},
     ${connection.escape(data.cart_amount)}, 
     ${connection.escape(data.cart_status)}, 
-    'admin',
+    ${connection.escape(connection.session._id)},
     NOW()
   )`
   connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })

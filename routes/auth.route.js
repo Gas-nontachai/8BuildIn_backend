@@ -12,7 +12,7 @@ router.post(
     AuthController.register
 );
 router.post("/refresh", AuthController.refresh)
-router.post("/getMyCredential", AuthController.getMyCredential)
-router.post("/changePassword", AuthController.changePassword)
+router.post("/getMyCredential", authJwt.protect(), AuthController.getMyCredential)
+router.post("/changePassword", authJwt.protect(), AuthController.changePassword)
 
 module.exports = router

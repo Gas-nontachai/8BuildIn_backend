@@ -78,7 +78,7 @@ Task.insertMaterial = (connection, data = {}) => new Promise((resolve, reject) =
     ${connection.escape(data.unit_id)},
     ${connection.escape(data.material_img)},
     ${connection.escape(data.stock_in_id)},
-    'admin', 
+    ${connection.escape(connection.session._id)}, 
     NOW() 
   )
 `;
@@ -102,7 +102,7 @@ Task.updateMaterialBy = (connection, data = {}) => new Promise((resolve, reject)
     unit_id = ${connection.escape(data.unit_id)},
     material_img = ${connection.escape(data.material_img)},
     stock_in_id = ${connection.escape(data.stock_in_id)},
-    updateby = 'admin',
+    updateby = ${connection.escape(connection.session._id)},
     lastupdate = NOW()
   WHERE material_id = ${connection.escape(data.material_id)}
 `;

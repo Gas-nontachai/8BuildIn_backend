@@ -72,7 +72,7 @@ Task.insertStockOut = (connection, data = {}) => new Promise((resolve, reject) =
     ${connection.escape(data.stock_in_price)}, 
     ${connection.escape(data.supplier_id)}, 
     ${connection.escape(data.stock_in_date)}, 
-    'admin',
+    ${connection.escape(connection.session._id)},
     NOW()
   )`
   connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })
@@ -85,7 +85,7 @@ Task.updateStockOutBy = (connection, data = {}) => new Promise((resolve, reject)
   stock_in_price = ${connection.escape(data.stock_in_price)}, 
   supplier_id = ${connection.escape(data.supplier_id)}, 
   stock_in_date = ${connection.escape(data.stock_in_date)},  
-  updateby = 'admin',
+  updateby = ${connection.escape(connection.session._id)},
   lastupdate = NOW() 
   WHERE stock_out_id = ${connection.escape(data.stock_out_id)}
   `
