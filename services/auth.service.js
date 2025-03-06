@@ -58,11 +58,8 @@ Task.refresh = async (connection, data) => {
 
 Task.changePassword = async (connection, data) => {
   const { new_password, current_password } = data
-
-  const employee = await EmployeeModel.getEmployeeCredentialByID(connection, { employee_id: connection.session._employee?.employee_id, })
-
-  if (employee.employee_password !== current_password) return { error: { message: 'Invalid password' } }
-
+  const employee = await EmployeeModel.getEmployeeCredentialByID(connection, { employee_id: connection.session._employee?.employee_id, }) 
+  if (employee.employee_password !== current_password) return { error: { message: 'Invalid password' } } 
   await EmployeeModel.updatePasswordEmployeeBy(connection, {
     employee_id: connection.session._employee?.employee_id,
     employee_password: new_password,

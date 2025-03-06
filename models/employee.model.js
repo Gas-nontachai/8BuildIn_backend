@@ -235,6 +235,16 @@ Task.updateEmployeeBy = (connection, data = {}) => new Promise((resolve, reject)
   connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })
 })
 
+Task.updatePasswordEmployeeBy = (connection, data = {}) => new Promise((resolve, reject) => {
+  let sql = `UPDATE tb_employee SET 
+    employee_password = ${connection.escape(data.employee_password)},
+    updateby = ${connection.escape(connection.session._id)},
+    lastupdate = NOW()
+    WHERE employee_id = ${connection.escape(data.employee_id)}
+  `
+  connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })
+})
+
 Task.deleteEmployeeBy = (connection, data = {}) => new Promise((resolve, reject) => {
   let sql = `DELETE FROM tb_employee WHERE employee_id = ${connection.escape(data.employee_id)} `
 
