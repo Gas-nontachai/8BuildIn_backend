@@ -60,12 +60,14 @@ Task.insertCart = (connection, data = {}) => new Promise((resolve, reject) => {
     cart_id, 
     cart_amount,
     cart_status,
+    product_id,
     addby,
     adddate
   ) VALUES (
     ${connection.escape(data.cart_id)},
     ${connection.escape(data.cart_amount)}, 
     ${connection.escape(data.cart_status)}, 
+    ${connection.escape(data.product_id)}, 
     ${connection.escape(connection.session._id)},
     NOW()
   )`
