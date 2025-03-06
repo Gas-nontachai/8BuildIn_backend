@@ -16,9 +16,8 @@ Task.insertCart = async (connection, data) => {
             ]
         }
     });
-    if (res.totalDocs) {
-        return await CartModel.getCartByID(connection, { cart_id: data.cart_id });
-
+    if (res.totalDocs > 0) {
+        return { message: "already in cart." };
     } else {
         data.cart_id = await CartModel.generateCartID(connection)
         await CartModel.insertCart(connection, data);
