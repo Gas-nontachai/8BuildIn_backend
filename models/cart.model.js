@@ -85,7 +85,6 @@ Task.updateCartBy = (connection, data = {}) => new Promise((resolve, reject) => 
 
 Task.deleteCartBy = (connection, data = {}) => new Promise((resolve, reject) => {
   let sql = `DELETE FROM tb_cart WHERE cart_id = ${connection.escape(data.cart_id)} `
-
   connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })
 })
 
