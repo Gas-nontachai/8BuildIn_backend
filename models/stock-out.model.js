@@ -58,20 +58,18 @@ Task.getStockOutByID = (connection, data = {}) => new Promise((resolve, reject) 
 Task.insertStockOut = (connection, data = {}) => new Promise((resolve, reject) => {
   let sql = `INSERT INTO tb_stock_out (
     stock_out_id, 
+    order_id,
     product, 
     material, 
-    stock_in_price, 
-    supplier_id, 
-    stock_in_date, 
+    stock_out_note,  
     addby, 
     adddate
   ) VALUES (
     ${connection.escape(data.stock_out_id)},
+    ${connection.escape(data.order_id)},
     ${connection.escape(data.product)}, 
     ${connection.escape(data.material)}, 
-    ${connection.escape(data.stock_in_price)}, 
-    ${connection.escape(data.supplier_id)}, 
-    ${connection.escape(data.stock_in_date)}, 
+    ${connection.escape(data.stock_out_note)},  
     ${connection.escape(connection.session._id)},
     NOW()
   )`
@@ -80,11 +78,10 @@ Task.insertStockOut = (connection, data = {}) => new Promise((resolve, reject) =
 
 Task.updateStockOutBy = (connection, data = {}) => new Promise((resolve, reject) => {
   let sql = `UPDATE tb_stock_out SET    
+  order_id = ${connection.escape(data.order_id)},
   product = ${connection.escape(data.product)},
   material = ${connection.escape(data.material)}, 
-  stock_in_price = ${connection.escape(data.stock_in_price)}, 
-  supplier_id = ${connection.escape(data.supplier_id)}, 
-  stock_in_date = ${connection.escape(data.stock_in_date)},  
+  stock_out_note = ${connection.escape(data.stock_out_note)},  
   updateby = ${connection.escape(connection.session._id)},
   lastupdate = NOW() 
   WHERE stock_out_id = ${connection.escape(data.stock_out_id)}

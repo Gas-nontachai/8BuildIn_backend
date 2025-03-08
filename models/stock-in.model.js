@@ -61,8 +61,8 @@ Task.insertStockIn = (connection, data = {}) => new Promise((resolve, reject) =>
     product, 
     material, 
     stock_in_price, 
-    supplier_id, 
-    stock_in_date, 
+    supplier_id,  
+    stock_in_note, 
     addby, 
     adddate
   ) VALUES (
@@ -70,8 +70,8 @@ Task.insertStockIn = (connection, data = {}) => new Promise((resolve, reject) =>
     ${connection.escape(data.product)}, 
     ${connection.escape(data.material)}, 
     ${connection.escape(data.stock_in_price)}, 
-    ${connection.escape(data.supplier_id)}, 
-    ${connection.escape(data.stock_in_date)}, 
+    ${connection.escape(data.supplier_id)},  
+    ${connection.escape(data.stock_in_note)}, 
     ${connection.escape(connection.session._id)},
     NOW()
   )`
@@ -83,6 +83,7 @@ Task.updateStockInBy = (connection, data = {}) => new Promise((resolve, reject) 
   product = ${connection.escape(data.product)},
   material = ${connection.escape(data.material)}, 
   stock_in_price = ${connection.escape(data.stock_in_price)}, 
+  stock_in_note = ${connection.escape(data.stock_in_note)}, 
   supplier_id = ${connection.escape(data.supplier_id)}
   WHERE stock_in_id = ${connection.escape(data.stock_in_id)}
   `
