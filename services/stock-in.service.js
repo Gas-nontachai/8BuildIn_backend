@@ -21,6 +21,7 @@ Task.insertStockIn = async (connection, data) => {
                 product_name: item.product_name,
                 product_quantity: item.product_quantity,
                 product_price: item.product_price / item.product_quantity,
+                unit_id: item.unit_id,
                 stock_in_id: res.stock_in_id
             }
             await ProductService.insertProduct(connection, product_data)
@@ -33,6 +34,7 @@ Task.insertStockIn = async (connection, data) => {
                 material_name: item.material_name,
                 material_quantity: item.material_quantity,
                 material_price: item.material_price / item.material_quantity,
+                unit_id: item.unit_id,
                 stock_in_id: res.stock_in_id
             }
             await MaterialService.insertMaterial(connection, material_data)
@@ -63,6 +65,7 @@ Task.updateStockInBy = async (connection, data) => {
                 product_name: item.product_name,
                 product_quantity: item.product_quantity,
                 product_price: item.product_price / item.product_quantity,
+                unit_id: item.unit_id,
                 stock_in_id: data.stock_in_id
             }
             await ProductService.insertProduct(connection, product_data)
@@ -75,6 +78,7 @@ Task.updateStockInBy = async (connection, data) => {
                 material_name: item.material_name,
                 material_quantity: item.material_quantity,
                 material_price: item.material_price / item.material_quantity,
+                unit_id: item.unit_id,
                 stock_in_id: data.stock_in_id
             }
             await MaterialService.insertMaterial(connection, material_data)
