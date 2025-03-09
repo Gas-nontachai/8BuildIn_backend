@@ -3,19 +3,17 @@ const Task = function (task) {
   this.created_at = new Date()
 }
 
+const { v4: uuidv4 } = require('uuid');
 const { formatDate } = require('@/utils/date-helper')
 const { generateQuery, mapToCondition } = require("@/utils/db-helper")
 
-Task.generateMaterialID = (connection) => new Promise((resolve, reject) => {
-  let code = `MT${formatDate(new Date(), 'yyyyMMdd')}-`
-  let digit = 3
-
-  let sql = `SELECT CONCAT(${connection.escape(code)}, LPAD(IFNULL(MAX(CAST(SUBSTRING(material_id,${(code.length + 1)},${digit}) AS SIGNED)),0) + 1,${digit},0)) AS id 
-		FROM tb_material
-		WHERE material_id LIKE (${connection.escape(`${code}%`)}) 
-	`
-  connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res[0].id) })
-})
+Task.generateMaterialID = () => new Promise((resolve) => {
+  let code = `MT${formatDate(new Date(), 'yyyyMMdd')}-`;
+  let digit = 5
+  let uuidSegment = uuidv4().replace(/-/g, '').substring(0, digit).toUpperCase();
+  let materialID = `${code}${uuidSegment}`;
+  resolve(materialID);
+});
 
 Task.getMaterialBy = (connection, data = {}) => new Promise((resolve, reject) => {
   let condition = mapToCondition(data)
@@ -27,7 +25,7 @@ Task.getMaterialBy = (connection, data = {}) => new Promise((resolve, reject) =>
     ${condition}
     ${filter} 
   `
-  const count_query = `SELECT COUNT(*) AS total FROM (${core_query}) AS tb` 
+  const count_query = `SELECT COUNT(*) AS total FROM (${core_query}) AS tb`
 
   if (data.count) return connection.query(count_query, function (err, res_total) {
     err ? reject(new Error(err.message)) : resolve(res_total[0].total)

@@ -11,6 +11,7 @@ Task.getStockInPermissionBy = (connection, data) => StockInModel.getStockInPermi
 
 Task.insertStockIn = async (connection, data) => {
     data.stock_in_id = await StockInModel.generateStockInID(connection);
+
     if (data.product) {
         const product = JSON.parse(data.product);
         const productArray = [];
@@ -68,6 +69,22 @@ Task.insertStockIn = async (connection, data) => {
 };
 
 Task.updateStockInBy = async (connection, data) => {
+    console.log(data);
+
+    if (data.del_pd_arr) {
+        for (const pd_id of data.del_pd_arr) {
+            console.log(pd_id);
+
+            await ProductService.deleteProductBy(connection, { product_id: pd_id })
+        }
+    }
+    if (data.del_mt_arr) {
+        for (const mt_id of data.del_mt_arr) {
+            console.log(mt_id);
+            await MaterialService.deleteMaterialBy(connection, { material_id: mt_id })
+
+        }
+    }
     if (data.product) {
         const products = JSON.parse(data.product);
         const productArray = [];
@@ -77,6 +94,8 @@ Task.updateStockInBy = async (connection, data) => {
                 await ProductService.updateProductBy(connection, product);
             } else {
                 product.product_id = await ProductService.generateProductID(connection);
+                product.stock_in_id = data.stock_in_id
+                product.product_price = product.product_price / product.product_quantity
                 await ProductService.insertProduct(connection, product);
             }
             productArray.push(product);
@@ -93,6 +112,8 @@ Task.updateStockInBy = async (connection, data) => {
                 await MaterialService.updateMaterialBy(connection, material);
             } else {
                 material.material_id = await MaterialService.generateMaterialID(connection);
+                material.stock_in_id = data.stock_in_id
+                material.material_price = material.material_price / material.material_quantity
                 await MaterialService.insertMaterial(connection, material);
             }
             materialArray.push(material);
