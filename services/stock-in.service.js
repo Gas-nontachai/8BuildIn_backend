@@ -10,84 +10,104 @@ Task.getStockInByID = (connection, data) => StockInModel.getStockInByID(connecti
 Task.getStockInPermissionBy = (connection, data) => StockInModel.getStockInPermissionBy(connection, data)
 
 Task.insertStockIn = async (connection, data) => {
-    data.stock_in_id = await StockInModel.generateStockInID(connection)
-    await StockInModel.insertStockIn(connection, data);
-    const res = await StockInModel.getStockInByID(connection, { stock_in_id: data.stock_in_id })
+    data.stock_in_id = await StockInModel.generateStockInID(connection);
     if (data.product) {
-        const product = JSON.parse(data.product)
+        const product = JSON.parse(data.product);
+        const productArray = [];
 
         for (const item of product) {
+            if (item.product_quantity === 0) {
+                throw new Error("product_quantity cannot be zero.");
+            }
+
             const product_data = {
+                product_id: await ProductService.generateProductID(connection),
                 product_name: item.product_name,
                 product_quantity: item.product_quantity,
                 product_price: item.product_price / item.product_quantity,
                 unit_id: item.unit_id,
-                stock_in_id: res.stock_in_id
-            }
-            await ProductService.insertProduct(connection, product_data)
+                stock_in_id: data.stock_in_id
+            };
+
+            productArray.push(product_data);
+            await ProductService.insertProduct(connection, product_data);
         }
+        data.product = JSON.stringify(productArray);
     }
     if (data.material) {
-        const material = JSON.parse(data.material)
+        const material = JSON.parse(data.material);
+        const materialArray = [];
+
         for (const item of material) {
+            if (item.material_quantity === 0) {
+                throw new Error("material_quantity cannot be zero.");
+            }
+
             const material_data = {
+                material_id: await MaterialService.generateMaterialID(connection),
                 material_name: item.material_name,
                 material_quantity: item.material_quantity,
                 material_price: item.material_price / item.material_quantity,
                 unit_id: item.unit_id,
-                stock_in_id: res.stock_in_id
-            }
-            await MaterialService.insertMaterial(connection, material_data)
+                stock_in_id: data.stock_in_id
+            };
+
+            materialArray.push(material_data);
+            await MaterialService.insertMaterial(connection, material_data);
         }
+
+        data.material = JSON.stringify(materialArray);
     }
+    await StockInModel.insertStockIn(connection, data);
+    const stockInData = await StockInModel.getStockInByID(connection, { stock_in_id: data.stock_in_id });
+
     return {
-        message: "add stock done"
-    }
+        message: "✅ Add stock done",
+        stock_in: stockInData
+    };
 };
 
 Task.updateStockInBy = async (connection, data) => {
-    const { docs: old_product_data } = await ProductService.getProductBy(connection, { match: { stock_in_id: data.stock_in_id } })
-    const { docs: old_material_data } = await MaterialService.getMaterialBy(connection, { match: { stock_in_id: data.stock_in_id } })
-    const del_product = old_product_data.map(item => item.product_id)
-    const del_material = old_material_data.map(item => item.material_id)
-    for (const product_id of del_product) {
-        await ProductService.deleteProductBy(connection, { product_id })
-    }
-    for (const material_id of del_material) {
-        await MaterialService.deleteMaterialBy(connection, { material_id })
-    }
-    await StockInModel.updateStockInBy(connection, data);
     if (data.product) {
-        const product = JSON.parse(data.product)
+        const products = JSON.parse(data.product);
+        const productArray = [];
 
-        for (const item of product) {
-            const product_data = {
-                product_name: item.product_name,
-                product_quantity: item.product_quantity,
-                product_price: item.product_price / item.product_quantity,
-                unit_id: item.unit_id,
-                stock_in_id: data.stock_in_id
+        for (const product of products) {
+            if (product.product_id) {
+                await ProductService.updateProductBy(connection, product);
+            } else {
+                product.product_id = await ProductService.generateProductID(connection);
+                await ProductService.insertProduct(connection, product);
             }
-            await ProductService.insertProduct(connection, product_data)
+            productArray.push(product);
         }
+
+        data.product = JSON.stringify(productArray);
     }
     if (data.material) {
-        const material = JSON.parse(data.material)
-        for (const item of material) {
-            const material_data = {
-                material_name: item.material_name,
-                material_quantity: item.material_quantity,
-                material_price: item.material_price / item.material_quantity,
-                unit_id: item.unit_id,
-                stock_in_id: data.stock_in_id
+        const materials = JSON.parse(data.material);
+        const materialArray = [];
+
+        for (const material of materials) {
+            if (material.material_id) {
+                await MaterialService.updateMaterialBy(connection, material);
+            } else {
+                material.material_id = await MaterialService.generateMaterialID(connection);
+                await MaterialService.insertMaterial(connection, material);
             }
-            await MaterialService.insertMaterial(connection, material_data)
+            materialArray.push(material);
         }
+
+        data.material = JSON.stringify(materialArray);
     }
+    await StockInModel.updateStockInBy(connection, data);
+    const stockInData = await StockInModel.getStockInByID(connection, { stock_in_id: data.stock_in_id });
+
     return {
-        message: "update stock done"
-    }
-}
+        message: "Update stock done",
+        stock_in: stockInData
+    };
+};
 
 Task.deleteStockInBy = async (connection, data) => {
     const { docs: old_product_data } = await ProductService.getProductBy(connection, { match: { stock_in_id: data.stock_in_id } })
