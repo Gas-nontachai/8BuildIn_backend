@@ -52,29 +52,32 @@ Task.insertProduct = async (connection, data, files) => {
 Task.updateProductBy = async (connection, data, files) => {
     if (data.product) {
         const product = JSON.parse(data.product);
-        const img_arr = []
-        const old_product = await ProductModel.getProductByID(connection, { product_id: product.product_id })
-        if (files) {
-            for (const element of old_product.product_img.split(',')) {
-                await removeFile(element)
-            }
-            for (const key in files) {
-                const product_img = await fileUpload(files[key], directory)
-                img_arr.push(product_img)
-            };
-            product.product_img = img_arr.join(',')
-            await ProductModel.updateProductBy(connection, product);
-            return await ProductModel.getProductByID(connection, { product_id: product.product_id });
-        } else {
-            product.product_img = old_product.product_img
-            await ProductModel.updateProductBy(connection, product);
-            return await ProductModel.getProductByID(connection, { product_id: product.product_id });
+        const old_product = await ProductModel.getProductByID(connection, { product_id: product.product_id });
+
+        let img_arr = old_product.product_img ? old_product.product_img.split(',') : [];
+        if (data.del_img_arr) {
+            const del_arr = JSON.parse(data.del_img_arr);
+            img_arr = img_arr.filter(img => {
+                if (del_arr.includes(img)) {
+                    removeFile(img);
+                    return false;
+                }
+                return true;
+            });
         }
+        if (files) {
+            for (const key in files) {
+                const product_img = await fileUpload(files[key], directory);
+                img_arr.push(product_img);
+            }
+        }
+        product.product_img = img_arr.join(',');
+        await ProductModel.updateProductBy(connection, product);
+        return await ProductModel.getProductByID(connection, { product_id: product.product_id });
     } else {
         await ProductModel.updateProductBy(connection, data);
     }
-
-}
+};
 
 Task.deleteProductBy = async (connection, data) => {
     const res = await ProductModel.getProductByID(connection, { product_id: data.product_id })
