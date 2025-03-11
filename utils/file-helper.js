@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const MB = 20
 const FILE_SIZE_LIMIT = MB * 1024 * 1024
-const FILE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.mp3', ".mp4", ".webm", ".ogg", '.pdf', '.txt', '.xls', '.xlsx', '.docx']
+const FILE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp', '.mp3', ".mp4", ".webm", ".ogg", '.pdf', '.txt', '.xls', '.xlsx', '.docx'];
 
 const createDirectory = (directory) => {
   directory = path.join(__dirname, '../public/', directory)

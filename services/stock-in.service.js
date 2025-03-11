@@ -3,6 +3,7 @@ const Task = function (task) { this.task = task.task }
 const { StockInModel } = require('@/models')
 const ProductService = require('./product.service')
 const MaterialService = require('./material.service')
+const { isChange } = require("@/utils/misc-helper")
 
 Task.generateStockInID = (connection) => StockInModel.generateStockInID(connection)
 Task.getStockInBy = (connection, data) => StockInModel.getStockInBy(connection, data)
@@ -63,24 +64,19 @@ Task.insertStockIn = async (connection, data) => {
     const stockInData = await StockInModel.getStockInByID(connection, { stock_in_id: data.stock_in_id });
 
     return {
-        message: "✅ Add stock done",
+        message: "Add stock done",
         stock_in: stockInData
     };
 };
 
 Task.updateStockInBy = async (connection, data) => {
-    console.log(data);
-
     if (data.del_pd_arr) {
         for (const pd_id of data.del_pd_arr) {
-            console.log(pd_id);
-
             await ProductService.deleteProductBy(connection, { product_id: pd_id })
         }
     }
     if (data.del_mt_arr) {
         for (const mt_id of data.del_mt_arr) {
-            console.log(mt_id);
             await MaterialService.deleteMaterialBy(connection, { material_id: mt_id })
 
         }
@@ -91,6 +87,12 @@ Task.updateStockInBy = async (connection, data) => {
 
         for (const product of products) {
             if (product.product_id) {
+                const old_product = await ProductService.getProductByID(connection, product);
+                product.stock_in_id = data.stock_in_id
+                product.product_price = product.product_price / product.product_quantity
+                product.product_img = old_product.product_img
+                product.product_category_id = old_product.product_category_id
+                product.unit_id = old_product.unit_id
                 await ProductService.updateProductBy(connection, product);
             } else {
                 product.product_id = await ProductService.generateProductID(connection);
@@ -98,9 +100,9 @@ Task.updateStockInBy = async (connection, data) => {
                 product.product_price = product.product_price / product.product_quantity
                 await ProductService.insertProduct(connection, product);
             }
+            product.product_price = product.product_price * product.product_quantity
             productArray.push(product);
         }
-
         data.product = JSON.stringify(productArray);
     }
     if (data.material) {
@@ -109,6 +111,12 @@ Task.updateStockInBy = async (connection, data) => {
 
         for (const material of materials) {
             if (material.material_id) {
+                const old_material = await MaterialService.getMaterialByID(connection, material);
+                material.stock_in_id = data.stock_in_id
+                material.material_price = material.material_price / material.material_quantity
+                material.material_img = old_material.material_img
+                material.material_category_id = old_material.material_category_id
+                material.unit_id = old_material.unit_id
                 await MaterialService.updateMaterialBy(connection, material);
             } else {
                 material.material_id = await MaterialService.generateMaterialID(connection);
@@ -116,9 +124,9 @@ Task.updateStockInBy = async (connection, data) => {
                 material.material_price = material.material_price / material.material_quantity
                 await MaterialService.insertMaterial(connection, material);
             }
+            material.material_price = material.material_price * material.material_quantity
             materialArray.push(material);
         }
-
         data.material = JSON.stringify(materialArray);
     }
     await StockInModel.updateStockInBy(connection, data);
