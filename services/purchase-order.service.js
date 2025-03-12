@@ -8,14 +8,14 @@ Task.getPurchaseOrderByID = (connection, data) => PurchaseOrderModel.getPurchase
 Task.getPurchaseOrderPermissionBy = (connection, data) => PurchaseOrderModel.getPurchaseOrderPermissionBy(connection, data)
 
 Task.insertPurchaseOrder = async (connection, data) => {
-    data.pr_id = await PurchaseOrderModel.generatePurchaseOrderID(connection)
+    data.po_id = await PurchaseOrderModel.generatePurchaseOrderID(connection)
     await PurchaseOrderModel.insertPurchaseOrder(connection, data);
-    return await PurchaseOrderModel.getPurchaseOrderByID(connection, { pr_id: data.pr_id });
+    return await PurchaseOrderModel.getPurchaseOrderByID(connection, { po_id: data.po_id });
 };
 
 Task.updatePurchaseOrderBy = async (connection, data) => {
     await PurchaseOrderModel.updatePurchaseOrderBy(connection, data);
-    return await PurchaseOrderModel.getPurchaseOrderByID(connection, { pr_id: data.pr_id });
+    return await PurchaseOrderModel.getPurchaseOrderByID(connection, { po_id: data.po_id });
 }
 
 Task.deletePurchaseOrderBy = async (connection, data) => {
