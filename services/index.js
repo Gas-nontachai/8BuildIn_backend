@@ -15,5 +15,6 @@ module.exports = {
   SupplierService: require('./supplier.service'),
   UnitService: require('./unit.service'),
   CartService: require('./cart.service'),
-  PurchaseRequestService: require('./purchase-request.service')
+  PurchaseRequestService: require('./purchase-request.service'),
+  PurchaseOrderService: require('./purchase-order.service')
 }
