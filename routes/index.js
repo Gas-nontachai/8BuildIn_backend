@@ -50,5 +50,5 @@ module.exports = (app) => {
   app.use(`/supplier`, require("./supplier.route"));
   app.use(`/unit`, require("./unit.route"));
   app.use(`/cart`, require("./cart.route"));
-
+  app.use(`/purchase-request`, require("./purchase-request.route"));
 }

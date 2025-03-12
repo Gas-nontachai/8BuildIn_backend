@@ -1,3 +1,5 @@
+const { PurchaseRequestController } = require('@/controllers');
+
 module.exports = {
   AuthService: require('./auth.service'),
   CustomerService: require('./customer.service'),
@@ -13,4 +15,5 @@ module.exports = {
   SupplierService: require('./supplier.service'),
   UnitService: require('./unit.service'),
   CartService: require('./cart.service'),
+  PurchaseRequestService: require('./purchase-request.service')
 }

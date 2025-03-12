@@ -13,4 +13,5 @@ module.exports = {
   SupplierModel: require('./supplier.model'),
   UnitModel: require('./unit.model'),
   CartModel: require('./cart.model'),
+  PurchaseRequestModel: require('./purchase-request.model'),
 }
