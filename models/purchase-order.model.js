@@ -60,6 +60,8 @@ Task.insertPurchaseOrder = (connection, data = {}) => new Promise((resolve, reje
     po_id, 
     pr_id, 
     supplier_id, 
+    product, 
+    material, 
     po_status, 
     po_note, 
     addby,
@@ -68,6 +70,8 @@ Task.insertPurchaseOrder = (connection, data = {}) => new Promise((resolve, reje
     ${connection.escape(data.po_id)},
     ${connection.escape(data.pr_id)}, 
     ${connection.escape(data.supplier_id)},
+    ${connection.escape(data.product)},
+    ${connection.escape(data.material)},
     ${connection.escape(data.po_status)},
     ${connection.escape(data.po_note)}, 
     ${connection.escape(connection.session._id)},
@@ -82,6 +86,8 @@ Task.updatePurchaseOrderBy = (connection, data = {}) => new Promise((resolve, re
   supplier_id = ${connection.escape(data.supplier_id)},
   po_status = ${connection.escape(data.po_status)},
   po_note = ${connection.escape(data.po_note)},
+  product = ${connection.escape(data.product)},
+  material = ${connection.escape(data.material)},
   updateby = ${connection.escape(connection.session._id)},
   lastupdate = NOW()
   WHERE po_id = ${connection.escape(data.po_id)}

@@ -16,20 +16,21 @@ Task.insertPurchaseRequest = async (connection, data) => {
 Task.updatePurchaseRequestBy = async (connection, data) => {
     if (data.pr_id) {
         const res = await PurchaseRequestModel.getPurchaseRequestByID(connection, { pr_id: data.pr_id });
-        const oldData = res;
         const updatedData = {
-            ...oldData,
+            ...res,
             pr_status: data.pr_status,
         };
-
-        const po_data = {
-            po_id: "",
+        const po_id = await PurchaseOrderModel.generatePurchaseOrderID(connection);
+        const insert_po_data = {
+            po_id,
             pr_id: data.pr_id,
             supplier_id: "",
+            product: res.product,
+            material: res.material,
             po_status: "pending",
-            po_note: "",
+            po_note: res.pr_note,
         }
-        await PurchaseOrderModel.insertPurchaseOrder(connection, po_data);
+        await PurchaseOrderModel.insertPurchaseOrder(connection, insert_po_data);
         await PurchaseRequestModel.updatePurchaseRequestBy(connection, updatedData);
         return await PurchaseRequestModel.getPurchaseRequestByID(connection, { pr_id: data.pr_id });
     } else {

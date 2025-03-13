@@ -77,8 +77,7 @@ Task.insertPurchaseRequest = (connection, data = {}) => new Promise((resolve, re
 })
 
 Task.updatePurchaseRequestBy = (connection, data = {}) => new Promise((resolve, reject) => {
-  let sql = `UPDATE tb_purchase_request SET
-  pr_id = ${connection.escape(data.pr_id)},
+  let sql = `UPDATE tb_purchase_request SET 
   pr_status = ${connection.escape(data.pr_status)}, 
   pr_note = ${connection.escape(data.pr_note)},
   product = ${connection.escape(data.product)},
