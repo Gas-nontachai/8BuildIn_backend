@@ -87,7 +87,6 @@ Task.updatePurchaseRequestBy = (connection, data = {}) => new Promise((resolve, 
   lastupdate = NOW()
   WHERE pr_id = ${connection.escape(data.pr_id)}
   `
-
   connection.query(sql, function (err, res) { err ? reject(new Error(err.message)) : resolve(res) })
 })
 

@@ -78,7 +78,7 @@ Task.insertPurchaseOrder = (connection, data = {}) => new Promise((resolve, reje
 
 Task.updatePurchaseOrderBy = (connection, data = {}) => new Promise((resolve, reject) => {
   let sql = `UPDATE tb_purchase_order SET    
-  pr_id = ${connection.escape(data.pr_id)}, ,
+  pr_id = ${connection.escape(data.pr_id)}, 
   supplier_id = ${connection.escape(data.supplier_id)},
   po_status = ${connection.escape(data.po_status)},
   po_note = ${connection.escape(data.po_note)},

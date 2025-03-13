@@ -2,7 +2,6 @@ const Task = function (task) { this.task = task.task }
 
 const { ProductModel } = require('@/models')
 const { fileUpload, removeFile } = require("@/utils/file-helper");
-const MaterialService = require('./material.service')
 
 const directory = 'product_imgs'
 
@@ -28,15 +27,14 @@ Task.insertProduct = async (connection, data, files) => {
         }
         if (product.material) {
             const material = JSON.parse(product.material)
-            for (const mt of material) {
-
-                const res = await MaterialService.getMaterialByID(connection, { material_id: mt.material_id })
-                const update_data = {
+            for (const mt of material) { 
+                const res = await MaterialModel.getMaterialByID(connection, { material_id: mt.material_id })
+                res = {
                     ...res,
                     material_id: mt.material_id,
                     material_quantity: res.material_quantity - mt.material_quantity
                 }
-                await MaterialService.updateMaterialBy(connection, update_data);
+                await MaterialModel.updateMaterialBy(connection, res);
             }
         }
         await ProductModel.insertProduct(connection, product);

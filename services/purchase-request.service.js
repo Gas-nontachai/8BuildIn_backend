@@ -1,7 +1,6 @@
 const Task = function (task) { this.task = task.task }
 
 const { PurchaseRequestModel, PurchaseOrderModel } = require('@/models')
-const PurchaseOrderService = require('./purchase-order.service')
 
 Task.generatePurchaseRequestID = (connection) => PurchaseRequestModel.generatePurchaseRequestID(connection)
 Task.getPurchaseRequestBy = (connection, data) => PurchaseRequestModel.getPurchaseRequestBy(connection, data)
@@ -30,7 +29,7 @@ Task.updatePurchaseRequestBy = async (connection, data) => {
             po_status: "pending",
             po_note: "",
         }
-        await PurchaseOrderService.insertPurchaseOrder(connection, po_data);
+        await PurchaseOrderModel.insertPurchaseOrder(connection, po_data);
         await PurchaseRequestModel.updatePurchaseRequestBy(connection, updatedData);
         return await PurchaseRequestModel.getPurchaseRequestByID(connection, { pr_id: data.pr_id });
     } else {
