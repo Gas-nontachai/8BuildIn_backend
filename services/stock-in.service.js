@@ -1,6 +1,6 @@
 const Task = function (task) { this.task = task.task }
 
-const { StockInModel, ProductModel, MaterialModel } = require('@/models')
+const { StockInModel, ProductModel, MaterialModel, PurchaseOrderModel } = require('@/models')
 
 Task.generateStockInID = (connection) => StockInModel.generateStockInID(connection)
 Task.getStockInBy = (connection, data) => StockInModel.getStockInBy(connection, data)
@@ -12,13 +12,9 @@ Task.insertStockIn = async (connection, data) => {
 
     if (data.product) {
         const product = JSON.parse(data.product);
-        const productArray = [];
+        if (product.some(item => item.product_quantity === 0)) return { message: "Product quantity cannot be zero." };
 
-        for (const item of product) {
-            if (item.product_quantity === 0) {
-                throw new Error("product_quantity cannot be zero.");
-            }
-
+        const productPromises = product.map(async (item) => {
             const product_data = {
                 product_id: await ProductModel.generateProductID(connection),
                 product_name: item.product_name,
@@ -28,20 +24,15 @@ Task.insertStockIn = async (connection, data) => {
                 stock_in_id: data.stock_in_id
             };
 
-            productArray.push(product_data);
             await ProductModel.insertProduct(connection, product_data);
-        }
-        data.product = JSON.stringify(productArray);
+            return product_data;
+        });
+        data.product = JSON.stringify(await Promise.all(productPromises));
     }
     if (data.material) {
         const material = JSON.parse(data.material);
-        const materialArray = [];
-
-        for (const item of material) {
-            if (item.material_quantity === 0) {
-                throw new Error("material_quantity cannot be zero.");
-            }
-
+        if (material.some(item => item.material_quantity === 0)) return { message: "Material quantity cannot be zero." };
+        const materialPromises = material.map(async (item) => {
             const material_data = {
                 material_id: await MaterialModel.generateMaterialID(connection),
                 material_name: item.material_name,
@@ -50,15 +41,19 @@ Task.insertStockIn = async (connection, data) => {
                 unit_id: item.unit_id,
                 stock_in_id: data.stock_in_id
             };
-
-            materialArray.push(material_data);
             await MaterialModel.insertMaterial(connection, material_data);
-        }
-        data.material = JSON.stringify(materialArray);
+            return material_data;
+        });
+        data.material = JSON.stringify(await Promise.all(materialPromises));
     }
+    let po_data = await PurchaseOrderModel.getPurchaseOrderByID(connection, { po_id: data.po_id });
+    po_data = {
+        ...po_data,
+        po_status: 'success'
+    }
+    await PurchaseOrderModel.updatePurchaseOrderBy(connection, po_data);
     await StockInModel.insertStockIn(connection, data);
     const stockInData = await StockInModel.getStockInByID(connection, { stock_in_id: data.stock_in_id });
-
     return {
         message: "Add stock done",
         stock_in: stockInData

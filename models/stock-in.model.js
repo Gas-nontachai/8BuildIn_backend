@@ -58,6 +58,7 @@ Task.getStockInByID = (connection, data = {}) => new Promise((resolve, reject) =
 Task.insertStockIn = (connection, data = {}) => new Promise((resolve, reject) => {
   let sql = `INSERT INTO tb_stock_in (
     stock_in_id, 
+    po_id, 
     product, 
     material, 
     stock_in_price, 
@@ -67,6 +68,7 @@ Task.insertStockIn = (connection, data = {}) => new Promise((resolve, reject) =>
     adddate
   ) VALUES (
     ${connection.escape(data.stock_in_id)},
+    ${connection.escape(data.po_id)},
     ${connection.escape(data.product)}, 
     ${connection.escape(data.material)}, 
     ${connection.escape(data.stock_in_price)}, 
